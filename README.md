@@ -57,8 +57,12 @@ Installation Instructions
 
 The necessary lexical semantic resources and software are linked from http://www.cs.cmu.edu/~ark/LexSem/.
 
-0. Make sure your system has the software described in the previous section.
+0. Make sure your system has the software described in the previous section. (remember to set up a virtual environment with Python 2)
 ```
+which python
+which pip
+#which virtualenv
+#pip install virtualenv
 mkdir ~/venvs  # create virtual environment
 cd ~/venvs
 virtualenv2 AMALGrAM
