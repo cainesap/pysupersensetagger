@@ -11,7 +11,7 @@ the analysis
 I do|`a n't think|cognition he 's|stative afraid to take_a_ strong _stand|cognition on gun_control|ARTIFACT , what_with his upbringing|ATTRIBUTE in El_Paso|LOCATION .
 ```
 
-will be predicted, grouping "take a stand", "gun control", "what with", and "El Paso" as MWEs and labeling several lexical expressions with supersenses (UPPERCASE for nouns, lowercase for verbs). The model and algorithms implemented in the tool are described in Schneider et al. (*TACL* 2014, NAACL-HLT 2015), and resources required to use it are available at http://www.cs.cmu.edu/~ark/LexSem/.
+will be predicted, grouping "take a stand", "gun control", "what with", and "El Paso" as MWEs and labeling several lexical expressions with supersenses (UPPERCASE for nouns, lowercase for verbs). The model and algorithms implemented in the tool are described in Schneider et al. ([*TACL* 2014](http://aclanthology.info/papers/Q14-1016/discriminative-lexical-semantic-segmentation-with-gaps-running-the-mwe-gamut), [NAACL-HLT 2015](http://aclanthology.info/papers/N15-1177/a-corpus-and-model-integrating-multiword-expressions-and-supersenses)), and resources required to use it are available at http://www.cs.cmu.edu/~ark/LexSem/.
 
 More generally, the codebase supports supervised discriminative learning and structured prediction of statistical sequence models over discrete data, i.e., taggers. It implements the structured perceptron (Collins, EMNLP 2002) for learning and the Viterbi algorithm for decoding. Cython is used to make decoding reasonably fast, even with millions of features. The software is released under the GPLv3 license (see LICENSE file).
 
@@ -58,21 +58,47 @@ Installation Instructions
 The necessary lexical semantic resources and software are linked from http://www.cs.cmu.edu/~ark/LexSem/.
 
 0. Make sure your system has the software described in the previous section.
+```
+mkdir ~/venvs  # create virtual environment
+cd ~/venvs
+virtualenv2 AMALGrAM
+source bin/activate
+pip install --upgrade pip  # ensure you have latest version of pip
+pip install cython nltk  # install dependencies
+python -m nltk.downloader all  # download corpora including wordnet
+```
 1. Download and unzip the AMALGrAM software release.
-2. Download and gunzip the tagger model in the AMALGrAM main directory. (If gunzip fails, your web browser may have unzipped it for you; simply remove the .gz extension from the filename.)
-3. Download and unzip the English Multiword Expression Lexicons in the AMALGrAM main directory.
+```
+mkdir ~/git  # clone github repository
+cd ~/git
+git clone https://github.com/nschneid/pysupersensetagger.git
+cd pysupersensetagger
+```
+2. Download and gunzip the [tagger model](http://www.cs.cmu.edu/~ark/LexSem/sst.model.pickle.gz) in the AMALGrAM main directory. (If gunzip fails, your web browser may have unzipped it for you; simply remove the .gz extension from the filename.)
+```
+mv ~/Downloads/sst.model.pickle.gz .
+mv sst.model.pickle.gz sst.model.pickle
+```
+3. Download and unzip the [English Multiword Expression Lexicons](http://demo.ark.cs.cmu.edu/download.php?url=http://www.cs.cmu.edu/~ark/LexSem/mwelex-1.0.zip) in the AMALGrAM main directory.
+```
+mv ~/Downloads/mwelex-1.0.zip .
+open mwelex-1.0.zip
+```
 4. If you have access to the SAID resource from LDC, follow the instructions in the lexicons package to build the said.json lexicon. Otherwise, create an empty file in its place:
-
-        $ touch mwelex/said.json
-
-    Note that the system will be at a disadvantage if it was trained to leverage SAID but cannot access it.
+```
+touch mwelex/said.json
+```
+Note that the system will be at a disadvantage if it was trained to leverage SAID but cannot access it.
 5. Check that the AMALGrAM main directory contains the directories and src/ and mwelex/ and the file sst.model.pickle.
 6. From the main directory, run the following script to generate a supersense lexicon from WordNet (via NLTK):
-
-        $ ./install.sh
-
-7. *Required for learning with STREUSLE, not required for prediction*: Download and unzip the STREUSLE corpus in the AMALGrAM main directory.
-
+```
+./install.sh
+```
+7. *Required for learning with STREUSLE, not required for prediction*: Download and unzip the [STREUSLE corpus](http://demo.ark.cs.cmu.edu/download.php?url=http://www.cs.cmu.edu/~ark/LexSem/streusle-3.0.zip) in the AMALGrAM main directory.
+```
+mv ~/Downloads/streusle-3.0.zip .
+open streusle-3.0.zip
+```
 
 Prediction with a Pretrained Model
 ----------------------------------
@@ -109,7 +135,7 @@ The format output directly by the tool consists of one line per token with 9 tab
 2. token
 3. lemma
 4. POS tag
-5. MWE+supersense tag: one of O o B b Ī Ĩ ī ĩ (see Schneider et al., *TACL* 2014 for an explanation), possibly hyphenated with a supersense label. E.g.: O-COGNITION
+5. MWE+supersense tag: one of O o B b Ī Ĩ ī ĩ (see Schneider et al., [*TACL* 2014](http://aclanthology.info/papers/Q14-1016/discriminative-lexical-semantic-segmentation-with-gaps-running-the-mwe-gamut) for an explanation), possibly hyphenated with a supersense label. E.g.: O-COGNITION
 6. MWE parent offset, or 0 if not continuing an MWE
 7. MWE attachment strength: _ (strong) or ~ (weak)
 8. supersense label: lowercase for verb supersenses and UPPERCASE for noun supersenses
@@ -145,9 +171,9 @@ Learning and Evaluation
 
 The evaluation scripts are src/mweval.py (for segmentation only) and src/ssteval.py (for supersense labels only).
 
-MWE+supersense model: The default model (sst.model) was trained with the hyperparameter settings: `--cutoff 5 --iters 4` (these were tuned by cross-validation on the training data). See (Schneider et al., NAACL-HLT 2015) for details, and REPLICATE.md for detailed instructions on replicating the main results from that paper.
+MWE+supersense model: The default model (sst.model) was trained with the hyperparameter settings: `--cutoff 5 --iters 4` (these were tuned by cross-validation on the training data). See (Schneider et al., [NAACL-HLT 2015](http://aclanthology.info/papers/N15-1177/a-corpus-and-model-integrating-multiword-expressions-and-supersenses)) for details, and REPLICATE.md for detailed instructions on replicating the main results from that paper.
 
-MWE-only model: The script train_test_mwe.sh executes the full pipeline of corpus preprocessing, POS tagging, training, test set prediction, and evaluation that constitutes the best experimental setting with automatic POS tags in (Schneider et al., *TACL* 2014). To replicate it, you will need the CMWE 1.0 corpus as well as the ARK TweetNLP POS Tagger and ewtb_pos.model. You will have to edit the `ark` variable in train_test_mwe.sh to point to the POS tagger directory.
+MWE-only model: The script train_test_mwe.sh executes the full pipeline of corpus preprocessing, POS tagging, training, test set prediction, and evaluation that constitutes the best experimental setting with automatic POS tags in (Schneider et al., [*TACL* 2014](http://aclanthology.info/papers/Q14-1016/discriminative-lexical-semantic-segmentation-with-gaps-running-the-mwe-gamut)). To replicate it, you will need the CMWE 1.0 corpus as well as the ARK TweetNLP POS Tagger and ewtb_pos.model. You will have to edit the `ark` variable in train_test_mwe.sh to point to the POS tagger directory.
 
 
 Contributing
