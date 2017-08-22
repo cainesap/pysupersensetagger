@@ -127,13 +127,14 @@ On the command line, call the sst.sh script with the path to the POS-tagged inpu
 
 ```
 cd ~/venvs/AMALGrAM
-source bin/activate
-cd ~/git/AMALGrAM
+source bin/activate  # start virtual environment
+cd ~/git/pysupersensetagger
 ls -l
-head example
-./sst.sh example
+head example  # or 'less example' to see the whole file ('Q' to quit)
+./sst.sh example  # run tagger
 ls -l
 head example.pred.tags
+deactivate  # closes the virtual environment
 ```
 
 This will create two output files: example.pred.tags and example.pred.sst.
