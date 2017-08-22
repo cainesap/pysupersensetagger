@@ -66,6 +66,7 @@ which pip
 mkdir ~/venvs  # create virtual environment
 cd ~/venvs
 virtualenv2 AMALGrAM
+cd AMALGrAM
 source bin/activate
 pip install --upgrade pip  # ensure you have latest version of pip
 pip install cython nltk  # install dependencies
@@ -75,6 +76,7 @@ python -m nltk.downloader all  # download corpora including wordnet
 ```
 mkdir ~/git  # clone github repository
 cd ~/git
+git ## on a Mac you'll be prompted to instal Command Line Tools if you don't already have git
 git clone https://github.com/nschneid/pysupersensetagger.git
 cd pysupersensetagger
 ```
@@ -123,7 +125,16 @@ A few example POS-tagged sentences are given in the file: example
 
 On the command line, call the sst.sh script with the path to the POS-tagged input file:
 
-    $ ./sst.sh example
+```
+cd ~/venvs/AMALGrAM
+source bin/activate
+cd ~/git/AMALGrAM
+ls -l
+head example
+./sst.sh example
+ls -l
+head example.pred.tags
+```
 
 This will create two output files: example.pred.tags and example.pred.sst.
 
